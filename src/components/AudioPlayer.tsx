@@ -9,20 +9,21 @@ interface AudioPlayerProps {
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldPlay }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [hasAudioError, setHasAudioError] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (shouldPlay && audioRef.current) {
+    if (shouldPlay && audioRef.current && !hasAudioError) {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
       }).catch((err) => {
-        console.warn("Audio autoplay blocked or interrupted:", err);
+        console.log("Audio autoplay notice:", err.message);
       });
     }
-  }, [shouldPlay]);
+  }, [shouldPlay, hasAudioError]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || hasAudioError) return;
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
@@ -30,7 +31,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldPlay }) => {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         setIsMuted(false);
-      }).catch((err) => console.log("Audio play error:", err));
+      }).catch((err) => {
+        console.log("Audio playback notice:", err.message);
+        setHasAudioError(true);
+      });
     }
   };
 
@@ -40,12 +44,16 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldPlay }) => {
         ref={audioRef}
         src={WEDDING_DATA.audio.fallbackAudioUrl}
         loop
-        preload="auto"
+        preload="none"
+        onError={() => {
+          setHasAudioError(true);
+          setIsPlaying(false);
+        }}
       />
 
       {/* Floating Audio Control Widget */}
       <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
-        {isPlaying && !isMuted && (
+        {isPlaying && !isMuted && !hasAudioError && (
           <div className="hidden sm:flex items-center gap-1.5 bg-[#FAF5ED]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md text-xs text-[#2E2824]">
             <Music size={12} className="text-[#B8935A] animate-spin" style={{ animationDuration: '6s' }} />
             <div className="flex items-end gap-[2px] h-3 px-1">
@@ -60,10 +68,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldPlay }) => {
 
         <button
           onClick={togglePlay}
+          disabled={hasAudioError}
           aria-label={isPlaying ? "Mute background music" : "Play background music"}
-          className="w-12 h-12 rounded-full bg-[#5C1826] text-[#B8935A] shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 group"
+          className={`w-12 h-12 rounded-full bg-[#5C1826] text-[#B8935A] shadow-lg flex items-center justify-center transition-all duration-300 ${
+            hasAudioError ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95 group'
+          }`}
+          title={hasAudioError ? "Audio unavailable offline" : "Toggle Music"}
         >
-          {isPlaying && !isMuted ? (
+          {isPlaying && !isMuted && !hasAudioError ? (
             <Volume2 size={20} className="group-hover:text-white" />
           ) : (
             <VolumeX size={20} className="opacity-80 group-hover:opacity-100" />
@@ -73,3 +85,5 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ shouldPlay }) => {
     </>
   );
 };
+
+export default AudioPlayer;

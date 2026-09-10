@@ -7,7 +7,6 @@ import CelebrationsCard from './components/CelebrationsCard';
 import { QuranVerseCard } from './components/QuranVerseCard';
 import CountdownCard from './components/CountdownCard';
 import VenuesLocationCard from './components/VenuesLocationCard';
-import { AudioPlayer } from './components/AudioPlayer';
 import { WEDDING_DATA } from './config/weddingData';
 import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -17,7 +16,6 @@ import { PetalDrizzle } from './components/PetalDrizzle';
 
 export function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [shouldPlayAudio, setShouldPlayAudio] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   // RSVP Form States
   const [attending, setAttending] = useState<'yes' | 'no' | null>(null);
@@ -29,7 +27,6 @@ export function App() {
 
   const handleIntroComplete = () => {
     setIsIntroComplete(true);
-    setShouldPlayAudio(false);
   };
 
   const handleRsvpSubmit = (e: React.FormEvent) => {
@@ -54,9 +51,6 @@ export function App() {
 
   return (
     <div className="h-[100vh] h-[100dvh] w-full bg-[#F5EFEB] selection:bg-[#4A1525] selection:text-white">
-      {/* Floating Audio Control Widget */}
-      <AudioPlayer shouldPlay={shouldPlayAudio} />
-
       {/* Background Petal Drizzle Effect on Main App Deck */}
       {isIntroComplete && <PetalDrizzle count={18} className="opacity-75" />}
 
@@ -69,7 +63,7 @@ export function App() {
 
       {/* 2. Main Scroll-Snap Deck (Mounted once intro finishes) */}
       {isIntroComplete && (
-        <main ref={mainRef} className="h-[100vh] h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth selection:bg-[#5c1c28] selection:text-white">
+        <main ref={mainRef} className="relative h-[100vh] h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth selection:bg-[#5c1c28] selection:text-white">
           
           {/* CARD 03: QURAN VERSE 1 */}
           <ScrollFadeSection containerRef={mainRef}>
