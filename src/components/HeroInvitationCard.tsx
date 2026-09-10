@@ -1,10 +1,15 @@
 import React from 'react';
 import { WEDDING_DATA } from '../config/weddingData';
 import { StaggerGroup, StaggerItem } from './StaggerGroup';
+import { BurgundyButterfly } from './BurgundyButterfly';
 
 export default function HeroInvitationCard() {
   return (
     <div className="relative w-full max-w-[440px] h-[90dvh] max-h-[740px] bg-[#FAF5ED] rounded-2xl shadow-xl flex flex-col justify-center items-center px-6 py-10 sm:px-8 sm:py-12 text-center overflow-hidden my-auto">
+
+      {/* --- BURGUNDY BUTTERFLIES ANIMATION --- */}
+      <BurgundyButterfly className="absolute top-8 right-8 sm:top-10 sm:right-12" size={48} />
+      <BurgundyButterfly className="absolute bottom-12 left-8 sm:bottom-14 sm:left-10" size={34} />
 
       {/* --- MAIN CORNER FLOWERS --- */}
       {/* Top-Right Organic Petal Cluster */}

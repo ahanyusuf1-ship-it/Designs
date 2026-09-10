@@ -13,6 +13,7 @@ import { Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ScrollFadeSection } from './components/ScrollFadeSection';
 import { StaggerGroup, StaggerItem } from './components/StaggerGroup';
+import { PetalDrizzle } from './components/PetalDrizzle';
 
 export function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
@@ -55,6 +56,9 @@ export function App() {
     <div className="h-[100vh] h-[100dvh] w-full bg-[#F5EFEB] selection:bg-[#4A1525] selection:text-white">
       {/* Floating Audio Control Widget */}
       <AudioPlayer shouldPlay={shouldPlayAudio} />
+
+      {/* Background Petal Drizzle Effect on Main App Deck */}
+      {isIntroComplete && <PetalDrizzle count={18} className="opacity-75" />}
 
       {/* 1. Envelope Intro Overlay (Plays once, dissolves out, and unmounts) */}
       <AnimatePresence>
@@ -229,7 +233,7 @@ export function App() {
           </ScrollFadeSection>
 
           {/* CARD 10: COUNTDOWN TIMER */}
-          <ScrollFadeSection containerRef={mainRef}>
+          <ScrollFadeSection containerRef={mainRef} id="card-countdown">
             <CountdownCard />
           </ScrollFadeSection>
         </main>
