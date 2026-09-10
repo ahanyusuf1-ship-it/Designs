@@ -18,7 +18,7 @@ export function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const mainRef = useRef<HTMLDivElement>(null);
-  const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // RSVP Form States
   const [attending, setAttending] = useState<'yes' | 'no' | null>(null);
