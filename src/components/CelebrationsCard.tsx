@@ -1,4 +1,3 @@
-import React from 'react';
 import { StaggerGroup, StaggerItem } from './StaggerGroup';
 
 export default function CelebrationsCard() {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { WEDDING_DATA } from '../config/weddingData';
 import { StaggerGroup, StaggerItem } from './StaggerGroup';
 import { BurgundyButterfly } from './BurgundyButterfly';

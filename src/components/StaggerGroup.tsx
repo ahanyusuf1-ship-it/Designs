@@ -1,5 +1,5 @@
 import { motion, type Variants } from 'framer-motion';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export const staggerContainer: Variants = {
   hidden: {},
