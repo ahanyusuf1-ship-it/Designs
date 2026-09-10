@@ -42,7 +42,7 @@ export function App() {
     });
   };
 
-  // Auto-scroll after 3.5s of inactivity on each card starting from Bismillah
+  // Auto-scroll after 7.0s of inactivity on each card starting from Bismillah
   useEffect(() => {
     if (!isIntroComplete || !mainRef.current) return;
 
@@ -62,7 +62,7 @@ export function App() {
             behavior: 'smooth',
           });
         }
-      }, 3500); // 3.5s auto-scroll delay
+      }, 7000); // 7.0s reading time delay
     };
 
     const handleScroll = () => {
