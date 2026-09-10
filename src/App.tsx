@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { EnvelopeIntro } from './components/EnvelopeIntro';
 import { CardSlide } from './components/CardSlide';
 import { HeroInvitationCard } from './components/HeroInvitationCard';
@@ -8,7 +8,7 @@ import { QuranVerseCard } from './components/QuranVerseCard';
 import CountdownCard from './components/CountdownCard';
 import VenuesLocationCard from './components/VenuesLocationCard';
 import { WEDDING_DATA } from './config/weddingData';
-import { Heart } from 'lucide-react';
+import { Heart, ChevronDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ScrollFadeSection } from './components/ScrollFadeSection';
 import { StaggerGroup, StaggerItem } from './components/StaggerGroup';
@@ -16,7 +16,10 @@ import { PetalDrizzle } from './components/PetalDrizzle';
 
 export function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const mainRef = useRef<HTMLDivElement>(null);
+  const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // RSVP Form States
   const [attending, setAttending] = useState<'yes' | 'no' | null>(null);
   const [fullName, setFullName] = useState('');
@@ -28,6 +31,66 @@ export function App() {
   const handleIntroComplete = () => {
     setIsIntroComplete(true);
   };
+
+  const scrollToNextCard = () => {
+    if (!mainRef.current) return;
+    const cardHeight = mainRef.current.clientHeight || window.innerHeight;
+    const nextIndex = Math.min(currentCardIndex + 1, 6);
+    mainRef.current.scrollTo({
+      top: nextIndex * cardHeight,
+      behavior: 'smooth',
+    });
+  };
+
+  // Auto-scroll after 3.5s of inactivity on each card starting from Bismillah
+  useEffect(() => {
+    if (!isIntroComplete || !mainRef.current) return;
+
+    const container = mainRef.current;
+
+    const startAutoScrollTimer = () => {
+      if (autoScrollTimerRef.current) clearTimeout(autoScrollTimerRef.current);
+
+      autoScrollTimerRef.current = setTimeout(() => {
+        if (!container) return;
+        const cardHeight = container.clientHeight || window.innerHeight;
+        const activeIdx = Math.round(container.scrollTop / cardHeight);
+
+        if (activeIdx < 6) {
+          container.scrollTo({
+            top: (activeIdx + 1) * cardHeight,
+            behavior: 'smooth',
+          });
+        }
+      }, 3500); // 3.5s auto-scroll delay
+    };
+
+    const handleScroll = () => {
+      const cardHeight = container.clientHeight || window.innerHeight;
+      const activeIdx = Math.round(container.scrollTop / cardHeight);
+      setCurrentCardIndex(activeIdx);
+      startAutoScrollTimer();
+    };
+
+    const handleUserInteraction = () => {
+      startAutoScrollTimer();
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchstart', handleUserInteraction, { passive: true });
+    window.addEventListener('mousedown', handleUserInteraction, { passive: true });
+    window.addEventListener('keydown', handleUserInteraction, { passive: true });
+
+    startAutoScrollTimer();
+
+    return () => {
+      if (autoScrollTimerRef.current) clearTimeout(autoScrollTimerRef.current);
+      container.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      window.removeEventListener('mousedown', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, [isIntroComplete]);
 
   const handleRsvpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +116,29 @@ export function App() {
     <div className="h-[100vh] h-[100dvh] w-full bg-[#F5EFEB] selection:bg-[#4A1525] selection:text-white">
       {/* Background Petal Drizzle Effect on Main App Deck */}
       {isIntroComplete && <PetalDrizzle count={18} className="opacity-75" />}
+
+      {/* Floating Scroll Down Arrow Button (Shown starting from Bismillah until Countdown) */}
+      <AnimatePresence>
+        {isIntroComplete && currentCardIndex < 6 && (
+          <motion.button
+            key="scroll-down-btn"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+            onClick={scrollToNextCard}
+            className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 cursor-pointer select-none group"
+            aria-label="Scroll to next page"
+          >
+            <span className="text-[9px] font-sans font-medium tracking-[0.25em] uppercase text-[#7A2436]/80 group-hover:text-[#7A2436] transition-colors">
+              SCROLL DOWN
+            </span>
+            <div className="w-8 h-8 rounded-full bg-[#FAF5ED]/90 backdrop-blur-md shadow-md border border-[#B8935A]/40 flex items-center justify-center text-[#7A2436] group-hover:bg-[#7A2436] group-hover:text-amber-100 transition-all duration-300 animate-bounce">
+              <ChevronDown size={18} strokeWidth={2.2} />
+            </div>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* 1. Envelope Intro Overlay (Plays once, dissolves out, and unmounts) */}
       <AnimatePresence>
