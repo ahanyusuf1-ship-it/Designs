@@ -76,16 +76,16 @@ export function EnvelopeIntro({ onComplete }: EnvelopeIntroProps) {
           </svg>
         </div>
 
-        {/* 3. THE MAROON ARCH CARD (Glides out smoothly) */}
+        {/* 3. THE RECTANGULAR CREAM CARD WITH MAROON ARCH (Fitted Red Spec) */}
         <motion.div
-          initial={{ y: 80, opacity: 0 }}
+          initial={{ y: 90, opacity: 0 }}
           animate={
             isOpen
               ? {
-                  y: -55, // Rises so all 4 lines are clearly visible above the pocket V
+                  y: -85, // Positioned exactly at the red rectangle boundary
                   opacity: 1,
                 }
-              : { y: 80, opacity: 0 }
+              : { y: 90, opacity: 0 }
           }
           transition={{
             y: { delay: 0.35, duration: 0.85, ease: [0.16, 1, 0.3, 1] },
@@ -93,48 +93,51 @@ export function EnvelopeIntro({ onComplete }: EnvelopeIntroProps) {
           }}
           className={`absolute ${
             isOpen ? 'z-[20]' : 'z-10'
-          } w-[270px] sm:w-[320px] h-[300px] sm:h-[340px] bg-[#42121B] rounded-t-[100px] sm:rounded-t-[125px] rounded-b-xl shadow-2xl px-4 pt-[72px] sm:pt-[88px] pb-6 flex flex-col items-center text-center select-none`}
+          } bg-[#FAF5ED] rounded-none shadow-2xl p-4 sm:p-5 w-[310px] sm:w-[370px] h-[345px] sm:h-[410px] relative flex flex-col items-center justify-center border border-[#E6DFD1] select-none`}
         >
-          {/* Ivory Flower Shoulder Accent */}
-          <div className="absolute top-14 right-3 sm:top-16 sm:right-4 w-6 h-6 pointer-events-none opacity-80">
-            <svg viewBox="0 0 100 100" className="w-full h-full fill-[#F5EDE0]">
-              <circle cx="50" cy="26" r="18" />
-              <circle cx="74" cy="50" r="18" />
-              <circle cx="50" cy="74" r="18" />
-              <circle cx="26" cy="50" r="18" />
-              <circle cx="50" cy="50" r="9" className="fill-[#D4C3A3]" />
-            </svg>
+          {/* Inner Maroon Arch Container (#42121B) */}
+          <div className="w-full h-full bg-[#42121B] rounded-t-[125px] sm:rounded-t-[155px] rounded-b-xl sm:rounded-b-2xl shadow-md overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 text-center relative">
+            {/* Inner Content Group (Vertically Centered inside Arch Dome) */}
+            <div className="w-full max-w-[220px] sm:max-w-[260px] flex flex-col items-center text-center my-auto py-0.5">
+              {/* Line 1: Arabic Bismillah */}
+              <p dir="rtl" lang="ar" className="font-serif text-sm sm:text-[18px] text-[#F3E5CA] tracking-wide leading-relaxed mb-0.5 sm:mb-1 break-words max-w-[92%]">
+                بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+              </p>
+
+              {/* Line 2: English Translation */}
+              <p className="font-serif italic text-[8.5px] sm:text-[10px] text-[#D8C7A5] tracking-wide font-light mb-3 sm:mb-4 max-w-[88%] break-words">
+                In the name of Allah, the Most Beneficent and Merciful
+              </p>
+
+              {/* Line 3: Names with Ampersand Spacing */}
+              <div className="w-full flex items-center justify-center gap-1.5 sm:gap-2.5 mb-3 sm:mb-4 px-1">
+                <span className="font-serif italic text-[clamp(1.05rem,4vw,1.5rem)] text-[#FAF2E1] tracking-normal leading-tight whitespace-nowrap">
+                  Ramees
+                </span>
+                <span className="font-serif font-normal text-sm sm:text-lg text-[#D8C7A5] italic">
+                  &amp;
+                </span>
+                <span className="font-serif italic text-[clamp(1.05rem,4vw,1.5rem)] text-[#FAF2E1] tracking-normal leading-tight whitespace-nowrap">
+                  Shameena
+                </span>
+              </div>
+
+              {/* Line 4: Special Day Quote */}
+              <p className="font-serif italic text-[10.5px] sm:text-xs text-[#D8C7A5] leading-relaxed max-w-[190px] sm:max-w-[220px] break-words">
+                “Your presence will make our day special.”
+              </p>
+            </div>
           </div>
 
-          {/* Inner Content Wrapper */}
-          <div className="w-full max-w-[220px] sm:max-w-[260px] flex flex-col items-center text-center mt-20 sm:mt-28 mb-auto">
-            {/* Line 1: Arabic Bismillah */}
-            <p dir="rtl" lang="ar" className="font-serif text-base sm:text-[20px] text-[#F3E5CA] tracking-wide leading-relaxed mb-1 break-words max-w-[90%]">
-              بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-            </p>
-
-            {/* Line 2: English Translation */}
-            <p className="font-serif italic text-[9.5px] sm:text-[10.5px] text-[#D8C7A5] tracking-wide font-light mb-5 sm:mb-7 max-w-[85%] break-words">
-              In the name of Allah, the Most Beneficent and Merciful
-            </p>
-
-            {/* Line 3: Names with Ampersand Spacing & Responsive Clamp Sizing */}
-            <div className="w-full flex items-center justify-center gap-2 sm:gap-3 mb-5 sm:mb-7 px-1">
-              <span className="font-serif italic text-[clamp(1.15rem,4.5vw,1.65rem)] text-[#FAF2E1] tracking-normal leading-tight whitespace-nowrap">
-                Ramees
-              </span>
-              <span className="font-serif font-normal text-base sm:text-xl text-[#D8C7A5] italic">
-                &amp;
-              </span>
-              <span className="font-serif italic text-[clamp(1.15rem,4.5vw,1.65rem)] text-[#FAF2E1] tracking-normal leading-tight whitespace-nowrap">
-                Shameena
-              </span>
-            </div>
-
-            {/* Line 4: Special Day Quote */}
-            <p className="font-serif italic text-xs sm:text-[13px] text-[#D8C7A5] leading-relaxed max-w-[200px] sm:max-w-[230px] break-words">
-              “Your presence will make our day special.”
-            </p>
+          {/* Ivory Flower Accent (Placed outside overflow-hidden so it is 100% visible on top-right shoulder) */}
+          <div className="absolute top-5 right-5 sm:top-7 sm:right-7 w-7 h-7 sm:w-9 sm:h-9 pointer-events-none z-20 opacity-95 drop-shadow-sm">
+            <svg viewBox="0 0 100 100" className="w-full h-full fill-[#FAF5ED]">
+              <circle cx="50" cy="24" r="18" />
+              <circle cx="76" cy="50" r="18" />
+              <circle cx="50" cy="76" r="18" />
+              <circle cx="24" cy="50" r="18" />
+              <circle cx="50" cy="50" r="9" className="fill-[#CBB68E]" />
+            </svg>
           </div>
         </motion.div>
 
